@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Correio e-xpress</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+    }
+
+    /* HEADER */
+    .header {
+        height: 60px;
+        background: #ffffff;
+        border-bottom: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .header-left img {
+        height: 40px;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        font-weight: bold;
+    }
+
+    .sair {
+        padding: 6px 14px;
+        background: #2d6cdf;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 4px;
+    }
+
+    /* CONTAINER PRINCIPAL */
+    .container {
+        display: flex;
+        height: calc(100vh - 60px);
+    }
+
+    /* COLUNA ESQUERDA */
+    .lista {
+        width: 35%;
+        background: #ffffff;
+        border-right: 1px solid #ccc;
+        overflow-y: auto;
+    }
+
+    .item {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+    }
+
+    .item:hover {
+        background: #f0f6ff;
+    }
+
+    .item h4 {
+        margin: 0;
+        font-size: 15px;
+    }
+
+    .item small {
+        display: block;
+        color: #555;
+    }
+
+    /* COLUNA DIREITA */
+    .conteudo {
+        width: 65%;
+        padding: 20px;
+        background: #fafafa;
+        overflow-y: auto;
+    }
+
+    .meta {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .corpo {
+        white-space: pre-line;
+        line-height: 1.5;
+    }
+
+    .placeholder {
+        color: #999;
+        font-style: italic;
+    }
+
+    .voltar {
+        display: none;
+        margin-bottom: 15px;
+        padding: 8px 12px;
+        background: #2d6cdf;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    /* MOBILE */
+    @media (max-width: 750px) {
+
+        .container {
+            flex-direction: column;
+        }
+
+        .lista,
+        .conteudo {
+            width: 100%;
+            height: calc(100vh - 60px);
+        }
+
+        .conteudo {
+            display: none;
+        }
+
+        .conteudo.mobile-ativo {
+            display: block;
+        }
+
+        .lista.mobile-escondida {
+            display: none;
+        }
+
+        .voltar {
+            display: inline-block;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-left">
+        <img src="imagens/logo.png" alt="Mosteiro de São Bento do Monte">
+    </div>
+    <div class="header-right">
+        ✉ Correios E-xpress
+        <button class="sair" onclick="sair()">Sair</button>
+    </div>
+</div>
+
+<!-- CONTEÚDO -->
+<div class="container">
+
+    <div class="lista">
+        <div class="item" onclick="abrirMensagem(0)">
+            <h4>RE: Tudo Certo?</h4>
+            <small>Remetente: Cecília Amarante</small>
+            <small>21/01/2022 – 18:40</small>
+        </div>
+
+        <div class="item" onclick="abrirMensagem(1)">
+            <h4>RE: Solicitação de visita técnica</h4>
+            <small>Remetente: Luís Ferreira</small>
+            <small>20/01/2022 – 12:15</small>
+        </div>
+
+        <div class="item" onclick="abrirMensagem(2)">
+            <h4>Recuperação de palavra-chave</h4>
+            <small>Remetente: TechCamSeg</small>
+            <small>21/01/2022 – 21:45</small>
+        </div>
+
+        <hr>
+
+        <div class="item" onclick="abrirMensagem(3)">
+            <h4>[RASCUNHO] Infração grave</h4>
+            <small>Destinatário: Domingos Leal</small>
+        </div>
+    </div>
+
+    <div class="conteudo" id="conteudo">
+        <p class="placeholder">Seleccione uma mensagem à esquerda.</p>
+    </div>
+
+</div>
+
+<script>
+const mensagens = [
+    {
+        titulo: "RE: Tudo certo?",
+        remetente: "Cecília Amarante",
+        data: "21/01/2022 – 18:40",
+        corpo: `Querido Manoel,
+Finalmente consegui organizar tudo 😊
+Se nada mudar, vou aí ao mosteiro na próxima terça-feira, dia 25...`
+    },
+    {
+        titulo: "RE: Solicitação de visita técnica",
+        remetente: "Luís Ferreira",
+        data: "20/01/2022 – 12:15",
+        corpo: `Confirmamos visita técnica para o dia 27 de janeiro...`
+    },
+    {
+        titulo: "Recuperação de Palavra-chave",
+        remetente: "TechCamSeg",
+        data: "21/01/2022 – 21:45",
+        corpo: `Sua nova senha de acesso é: yIbs976&hs87`
+    },
+    {
+        titulo: "Infração Grave",
+        remetente: "RASCUNHO",
+        data: "Mensagem não enviada",
+        corpo: `Reverendíssimo, escrevo-lhe com algum peso de consciência...`
+    }
+];
+
+function abrirMensagem(index) {
+    const msg = mensagens[index];
+    const conteudo = document.getElementById("conteudo");
+    const lista = document.querySelector(".lista");
+
+    conteudo.innerHTML = `
+        <button class="voltar" onclick="voltarLista()">← Voltar</button>
+        <h2>${msg.titulo}</h2>
+        <div class="meta">
+            <strong>Remetente:</strong> ${msg.remetente}<br>
+            <strong>Data:</strong> ${msg.data}
+        </div>
+        <div class="corpo">${msg.corpo}</div>
+    `;
+
+    if (window.innerWidth <= 750) {
+        lista.classList.add("mobile-escondida");
+        conteudo.classList.add("mobile-ativo");
+    }
+}
+
+function voltarLista() {
+    document.querySelector(".conteudo").classList.remove("mobile-ativo");
+    document.querySelector(".lista").classList.remove("mobile-escondida");
+}
+
+function sair() {
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
